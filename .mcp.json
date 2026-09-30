@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "umov-quests": {
+      "type": "http",
+      "url": "https://backeu.umov.net/mcp"
+    }
+  }
+}

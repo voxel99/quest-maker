@@ -114,10 +114,12 @@ flowchart LR
 ```text
 quest-maker/
 ├── .claude-plugin/
-│   └── plugin.json          # Claude plugin manifest and connector metadata
+│   └── plugin.json          # Claude plugin manifest
+├── .mcp.json                # Remote MCP server (umov-quests) config
 ├── skills/
 │   └── quest-designer/
 │       └── SKILL.md         # Narrative architect system skill & guidelines
+├── evals/                   # `claude plugin eval` suite
 ├── examples/
 │   └── haunted-mansion.json # Fully verified sample branching quest
 ├── README.md                # Documentation & quick start guide
