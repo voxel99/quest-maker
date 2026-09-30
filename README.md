@@ -70,8 +70,8 @@ The connector provides four tools that Claude uses during the creative process:
 |---|---|---|
 | `quest_get_capabilities` | Read-only | Returns supported quest types (`investigation`, `walkthrough`), available puzzle engines (`trivia`, `problem`, visual placeholders), reserved facts (`lives`, `coins`, `rating`), and ID rules. |
 | `quest_get_schema` | Read-only | Returns the formal JSON Schema for bare quest graphs and versioned `umov.quest-package` bundles. |
-| `quest_validate` | Read-only | Authoritative structural validator. Checks for broken edge references, invalid types, cycle issues, and emits JSON-pointer errors and warnings. |
-| `quest_simulate` | Read-only | Static reachability analyzer. Verifies that all locations are reachable from the start, all endings can be achieved, identifies dead ends, and computes max rewards. |
+| `quest_validate` | Read-only | Authoritative structural validator. Checks for broken edge references, invalid types, cycle issues, and emits JSON-pointer errors, warnings, and non-blocking improvement suggestions. |
+| `quest_simulate` | Read-only | Static reachability analyzer. Verifies that all locations are reachable from the start, all endings can be achieved, identifies dead ends, computes max rewards, and offers enhancement hints. |
 
 ---
 
@@ -81,11 +81,12 @@ The connector provides four tools that Claude uses during the creative process:
 flowchart LR
     A[Author's Idea] --> B[Claude Quest Designer]
     B --> C[Draft Narrative Graph]
-    C --> D[quest_validate]
-    D --> E[quest_simulate]
-    E --> F{Playable & Balanced?}
-    F -- Warnings/Errors --> B
-    F -- Valid & Verified --> G[Playable UMOV Quest]
+    C --> D[quest_validate & quest_simulate]
+    D --> E{Valid & Playable?}
+    E -- Structural Errors --> B
+    E -- Improvement Suggestions --> H[Creative Polish & Enhancements]
+    H --> B
+    E -- Ready to Publish --> G[Playable UMOV Quest]
 ```
 
 ### Example Authoring Flow

@@ -102,6 +102,19 @@ Verify player experience and game balance:
 - Ensure `dead_ends` is empty (every path leads to an ending).
 - Check `reward_max` to confirm appropriate coin and rating payouts.
 
+#### Step D: Processing Engine Suggestions (`suggestions`)
+Both `quest_validate` and `quest_simulate` return an array of `suggestions` containing non-blocking improvement opportunities:
+- `reward_opportunity`: Suggests adding coin/rating rewards to victory endings (`gives: [{"key": "coins", "delta": 50}]`).
+- `state_opportunity`: Highlights when a quest is purely branch-based without state variables, suggesting inventory or clues (`gives` / `requirements`).
+- `ending_variety`: Suggests adding alternative endings (defeat, bittersweet) if only one ending type exists.
+- `puzzle_opportunity`: Identifies text-only scenes that could benefit from interactive puzzles (`trivia`, `problem`, visual puzzle placeholders).
+- `chance_mechanic`: Recommends using the `chances` collection for risky choices (dice rolls / stat checks).
+
+**How to handle suggestions with the user:**
+- Treat the quest as fully valid (`valid: true`), but proactively present 1–2 relevant suggestions as creative inspiration:
+  *“The quest structure is fully valid! The UMOV engine also suggested that we could reward the player with 50 coins in the victory finale, or add a dexterity check (chance roll) during the chase scene. Would you like to incorporate any of these?”*
+- Never force suggestions if the creator prefers a simple or purely literary quest.
+
 ### Phase 4: Output & Publishing
 1. Present the final, verified JSON quest package in a clean code block.
 2. Provide instructions for the author:
