@@ -4,7 +4,7 @@ timeout_seconds: 300
 allowed_tools: [Skill]
 ---
 
-Here is the graph of my UMOV quest "Тайна поместья Блэквуд" (the repo's examples/haunted-mansion.json). Check it with the UMOV engine: is the quest structurally valid, are all locations and endings reachable, and is it ready to publish? Give me a short verdict.
+Here is the graph of my UMOV quest "The Mystery of Blackwood Manor" (the repo's examples/haunted-mansion.json). Check it with the UMOV engine: is the quest structurally valid, are all locations and endings reachable, and is it ready to publish? Give me a short verdict.
 
 ```json
 {

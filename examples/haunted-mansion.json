@@ -1,6 +1,6 @@
 {
   "$schema": "https://backeu.umov.net/mcp",
-  "title": "Тайна поместья Блэквуд",
+  "title": "The Mystery of Blackwood Manor",
   "description": "Пример интерактивного текстового квеста с ветвлением, тремя концовками и проверкой достижимости.",
   "graph": {
     "locations": [
