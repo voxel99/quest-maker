@@ -1,134 +1,114 @@
 # UMOV Quest Maker
 
-> An AI-powered interactive text quest and story game designer for Claude, integrated with the [UMOV](https://umov.net) gaming and puzzle platform.
+Design branching text quests with Claude and save them as drafts in your [UMOV](https://umov.net) account.
 
-[![Claude Plugin](https://img.shields.io/badge/Claude-Plugin%20Bundle-6366f1.svg)](https://claude.ai)
-[![MCP Server](https://img.shields.io/badge/MCP-Remote%20Connector-10b981.svg)](https://backeu.umov.net/mcp)
+UMOV is a puzzle and brain-training platform with crosswords, logic puzzles, quizzes and
+interactive quests. A UMOV quest is a graph: locations joined by choices, facts that open new
+paths, characters and dialogues, clues, puzzles, and several endings. This plugin teaches Claude
+how to build that graph from your story idea and check it with the UMOV quest engine, so nothing
+reaches you with broken links, unreachable rooms or endings nobody can get to.
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
----
+## What's in the plugin
 
-## 🌟 Overview
+- **`quest-designer` skill.** Guides the work in order: agree on the premise, the true story
+  behind it, suspects or obstacles, clues, and endings; lay them out as locations, choices and
+  facts; then generate the graph and verify it with the engine before handing it over.
+- **UMOV Quest connector** (`.mcp.json`). A remote MCP server at `https://backeu.umov.net/mcp`
+  that provides the quest schema, the validator, the simulator and, after you sign in, your drafts.
 
-**UMOV Quest Maker** turns Claude into a professional game master and interactive narrative architect. Whether you want to write a gritty detective noir mystery, a sci-fi space station escape, a gothic horror story, or an educational branching scenario, Quest Maker guides you from the first spark of an idea to a fully validated, playable quest graph.
+## Tools
 
-Under the hood, the plugin communicates with the **UMOV Quest Engine** via a remote Model Context Protocol (MCP) server running in the Netherlands:
-```
-https://backeu.umov.net/mcp
-```
+Four tools work without an account:
 
-### Key Capabilities
+| Tool | What it does |
+|---|---|
+| `quest_get_capabilities` | Quest kinds (investigation, walkthrough), supported mechanics and puzzles, reserved facts (`lives`, `coins`, `rating`), ID rules. |
+| `quest_get_schema` | JSON Schema for a bare quest graph and for a versioned `umov.quest-package`. |
+| `quest_validate` | Structural check. Returns errors and warnings with JSON Pointers, plus non-blocking suggestions (rewards, clues, extra endings, puzzles, dice rolls). |
+| `quest_simulate` | Static playthrough. Reports which locations and endings are reachable, dead ends, and the maximum reward. |
 
-- **Interactive Story Co-Creation:** Brainstorm settings, characters, plot twists, dilemmas, and multiple endings with Claude.
-- **Graph Invariant Validation:** Automatically verifies that transitions, node bindings, and requirements are structurally sound using `quest_validate`.
-- **Playability Simulation:** Statically checks every possible path via `quest_simulate` to ensure that all locations and endings are reachable and that no players get stuck in accidental dead ends.
-- **Ready for Publication:** Generates clean, compliant quest packages ready to be opened in the UMOV visual quest editor or played directly on the web.
+Four tools act on your UMOV account and require signing in:
 
----
+| Tool | What it does |
+|---|---|
+| `quest_list_mine` | Lists your quests: title, status, revision, editor link. |
+| `quest_get_mine` | Returns one of your quests as a package, so Claude can extend it. |
+| `quest_create_draft` | Validates a package and saves it as a new **draft**. Returns the editor link and the list of puzzles you still need to set up by hand. |
+| `quest_update_draft` | Replaces the graph of your draft. Needs the current revision, so a stale copy can't overwrite newer edits. |
 
-## 🚀 Installation
+Claude never publishes anything. Drafts stay private until you open the editor link and publish
+them yourself, and published quests go through the usual UMOV moderation.
 
-### Option 1: Claude Directory (Recommended)
-1. In [Claude](https://claude.ai), open the **Directory** / **Integrations** tab.
-2. Search for **UMOV Quest Maker**.
-3. Click **Add to Claude**.
+## Installation
 
----
+**Claude Directory.** Find **UMOV Quest Maker** in the Claude directory and add it.
 
-### Option 2: Custom Remote Connector in Claude.ai
-1. Go to **Settings** → **Connectors / Integrations** in [claude.ai](https://claude.ai).
-2. Click **Add Custom Connector**.
-3. Enter the connector details:
-   - **Name:** `UMOV Quest Engine`
-   - **Endpoint URL:** `https://backeu.umov.net/mcp`
-4. Click **Save**. Claude will automatically discover the tools.
+**Connector only (claude.ai or Claude Desktop).** Settings → Connectors → *Add custom connector*,
+URL `https://backeu.umov.net/mcp`. You get the tools without the skill.
 
----
+**Claude Code.**
 
-### Option 3: Claude Desktop Configuration
-
-Add the remote MCP server to your `claude_desktop_config.json`:
-
-```json
-{
-  "mcpServers": {
-    "umov-quests": {
-      "type": "remote",
-      "url": "https://backeu.umov.net/mcp"
-    }
-  }
-}
+```bash
+claude mcp add --transport http umov-quests https://backeu.umov.net/mcp
 ```
 
----
+## Signing in
 
-## 🛠️ MCP Tools Reference
+The read-only tools need no account. The first time Claude calls a tool that touches your
+drafts, your client opens a UMOV sign-in page (OAuth 2.1 with PKCE). You log in or register on
+umov.net and approve access. Claude receives a token limited to your quests (`quests:read`,
+`quests:write`); it never sees your password. To cut access, disconnect the connector in your
+client; the token itself can be revoked through the standard OAuth revoke endpoint
+(`/oauth/revoke`).
 
-The connector provides four tools that Claude uses during the creative process:
+## What you finish in the editor
 
-| Tool | Type | Description |
-|---|---|---|
-| `quest_get_capabilities` | Read-only | Returns supported quest types (`investigation`, `walkthrough`), available puzzle engines (`trivia`, `problem`, visual placeholders), reserved facts (`lives`, `coins`, `rating`), and ID rules. |
-| `quest_get_schema` | Read-only | Returns the formal JSON Schema for bare quest graphs and versioned `umov.quest-package` bundles. |
-| `quest_validate` | Read-only | Authoritative structural validator. Checks for broken edge references, invalid types, cycle issues, and emits JSON-pointer errors, warnings, and non-blocking improvement suggestions. |
-| `quest_simulate` | Read-only | Static reachability analyzer. Verifies that all locations are reachable from the start, all endings can be achieved, identifies dead ends, computes max rewards, and offers enhancement hints. |
+Text content is complete when it leaves Claude: locations, choices, facts, rules, dialogues,
+clues, trivia questions, tasks with text answers, and endings. Some things are left for the
+UMOV editor:
 
----
+- **Images.** Claude doesn't generate pictures. It can write a media plan (what each scene should
+  show), which is saved with the draft as an author note.
+- **Visual puzzles.** Find-the-object, spot-the-difference and jigsaw puzzles need images, so
+  Claude inserts placeholders. `quest_create_draft` returns the list of placeholders to fill in.
 
-## 📖 How It Works
+You can also try a quest graph without an account in the sandbox at
+[umov.net/test-quest](https://umov.net/test-quest).
 
-```mermaid
-flowchart LR
-    A[Author's Idea] --> B[Claude Quest Designer]
-    B --> C[Draft Narrative Graph]
-    C --> D[quest_validate & quest_simulate]
-    D --> E{Valid & Playable?}
-    E -- Structural Errors --> B
-    E -- Improvement Suggestions --> H[Creative Polish & Enhancements]
-    H --> B
-    E -- Ready to Publish --> G[Playable UMOV Quest]
-```
+## Example requests
 
-### Example Authoring Flow
+- *"Let's make a detective quest: a stolen emerald in a Victorian manor, three suspects, a safe
+  whose code you find in the study, a correct accusation and two false ones."*
+- *"Check this quest graph and fix whatever the engine complains about."* (paste the JSON)
+- *"Show my UMOV quests and add a branch to the lighthouse draft where the keeper lies."*
+- *"Here's the plot of my short story, turn it into an investigation quest with a false ending."*
 
-1. **The Premise:**
-   > *"I want to create a short detective quest set in Victorian London. The player investigates the theft of an emerald from Lord Blackwood's study. There should be 3 suspects, a hidden safe puzzle, and 2 distinct endings."*
+## Privacy and limits
 
-2. **The Architecture:**
-   Claude designs a branching tree with:
-   - Starting scene: `Foyer of Blackwood Manor`.
-   - Clue exploration branches: `Study (Crime Scene)`, `Servants' Quarters`, `Conservatory`.
-   - Gatekeeper: Inspecting the fireplace reveals the safe combination (`has_safe_code`).
-   - Endings: Correct accusation (`win`), False arrest (`lose`), Betrayed by partner (`end`).
+- The connector receives only the quest graph and the tool arguments. Your conversation, and
+  any book or file you give Claude to adapt, are not sent to UMOV.
+- Signed-in calls are tied to your UMOV account. The server keeps your drafts and the OAuth
+  tokens; deleting your UMOV profile removes them together with your content.
+- Limits: 20 new drafts per user per day, up to 500 locations and 1000 transitions per quest,
+  request body up to 2 MB.
+- Privacy policy: [umov.net/privacy](https://umov.net/privacy). Connector documentation:
+  [umov.net/docs/mcp](https://umov.net/docs/mcp). Contact: support@umov.net.
 
-3. **Validation & Simulation:**
-   Claude runs `quest_validate` and `quest_simulate` against `https://backeu.umov.net/mcp` to ensure no orphaned nodes or dead ends exist.
-
-4. **Testing in the Sandbox:**
-   Once verified, import the JSON directly into the [UMOV Quest Sandbox](https://umov.net/test-quest) to play and refine.
-
----
-
-## 📂 Repository Structure
+## Repository layout
 
 ```text
 quest-maker/
-├── .claude-plugin/
-│   └── plugin.json          # Claude plugin manifest
-├── .mcp.json                # Remote MCP server (umov-quests) config
-├── skills/
-│   └── quest-designer/
-│       └── SKILL.md         # Narrative architect system skill & guidelines
-├── evals/                   # `claude plugin eval` suite
-├── examples/
-│   └── haunted-mansion.json # Fully verified sample branching quest
-├── README.md                # Documentation & quick start guide
-├── LICENSE                  # MIT License
-└── .gitignore               # Standard gitignore
+├── .claude-plugin/plugin.json      # plugin manifest
+├── .mcp.json                       # UMOV Quest connector
+├── skills/quest-designer/SKILL.md  # quest design process
+├── examples/haunted-mansion.json   # sample quest graph that passes validation
+├── evals/                          # `claude plugin eval` cases with mocked MCP responses
+├── README.md
+└── LICENSE
 ```
 
----
+## License
 
-## 📄 License
-
-Released under the [MIT License](LICENSE). Copyright (c) 2026 voxel99 / UMOV.
+[MIT](LICENSE). Copyright (c) 2026 voxel99 / UMOV.
