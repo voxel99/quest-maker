@@ -1,0 +1,35 @@
+{
+  "tools": [
+    {
+      "name": "quest_get_capabilities",
+      "description": "Returns supported quest types, puzzle engines, reserved facts (lives, coins, rating) and ID rules of the UMOV quest engine.",
+      "inputSchema": { "type": "object", "properties": {} }
+    },
+    {
+      "name": "quest_get_schema",
+      "description": "Returns the JSON Schema for bare quest graphs and versioned umov.quest-package bundles.",
+      "inputSchema": {
+        "type": "object",
+        "properties": { "kind": { "type": "string", "enum": ["graph", "package"] } }
+      }
+    },
+    {
+      "name": "quest_validate",
+      "description": "Authoritative structural validator. Checks broken edge references, invalid types and cycles; returns valid, errors (JSON pointers), warnings and non-blocking suggestions.",
+      "inputSchema": {
+        "type": "object",
+        "properties": { "graph": { "type": "object" }, "draft": { "type": "boolean" } },
+        "required": ["graph"]
+      }
+    },
+    {
+      "name": "quest_simulate",
+      "description": "Static reachability analyzer. Reports reachable locations and endings, dead ends, max rewards and enhancement suggestions.",
+      "inputSchema": {
+        "type": "object",
+        "properties": { "graph": { "type": "object" } },
+        "required": ["graph"]
+      }
+    }
+  ]
+}
