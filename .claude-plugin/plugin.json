@@ -1,0 +1,39 @@
+{
+  "$schema": "https://raw.githubusercontent.com/anthropics/claude-plugins/main/schemas/plugin.json",
+  "name": "quest-maker",
+  "display_name": "UMOV Quest Maker",
+  "version": "1.0.0",
+  "description": "Interactive text quest and story game designer. Brainstorm branching narratives, validate game graph reachability, simulate player choices, and publish playable drafts to UMOV.",
+  "author": {
+    "name": "voxel99",
+    "url": "https://umov.net"
+  },
+  "homepage": "https://umov.net",
+  "repository": "https://github.com/voxel99/quest-maker",
+  "license": "MIT",
+  "keywords": [
+    "quest",
+    "interactive-fiction",
+    "game-design",
+    "storytelling",
+    "branching-narrative",
+    "text-adventure",
+    "rpg",
+    "mcp",
+    "umov"
+  ],
+  "mcp_servers": [
+    {
+      "name": "umov-quests",
+      "type": "remote",
+      "url": "https://backeu.umov.net/mcp"
+    }
+  ],
+  "skills": [
+    {
+      "name": "quest-designer",
+      "path": "skills/quest-designer/SKILL.md",
+      "description": "Expert game designer for interactive branching text quests. Guides narrative planning, builds compliant game graphs, runs simulations, and prepares drafts for publication."
+    }
+  ]
+}
