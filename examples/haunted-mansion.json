@@ -1,37 +1,37 @@
 {
   "$schema": "https://backeu.umov.net/mcp",
   "title": "The Mystery of Blackwood Manor",
-  "description": "Пример интерактивного текстового квеста с ветвлением, тремя концовками и проверкой достижимости.",
+  "description": "A sample interactive text quest with branching, three endings and a reachability check.",
   "graph": {
     "locations": [
       {
         "id": -1,
-        "title": "Вход в поместье",
+        "title": "Manor Entrance",
         "is_start": true
       },
       {
         "id": -2,
-        "title": "Тёмный коридор"
+        "title": "Dark Corridor"
       },
       {
         "id": -3,
-        "title": "Старинная библиотека"
+        "title": "Old Library"
       },
       {
         "id": -4,
-        "title": "Тайная сокровищница",
+        "title": "Secret Treasury",
         "is_result": true,
         "ending": "win"
       },
       {
         "id": -5,
-        "title": "Ловушка с шипами",
+        "title": "Spike Trap",
         "is_result": true,
         "ending": "lose"
       },
       {
         "id": -6,
-        "title": "Бегство через ворота",
+        "title": "Escape Through the Gates",
         "is_result": true,
         "ending": "end"
       }
@@ -42,71 +42,71 @@
         "from_binding_id": -1,
         "to_binding_id": -2,
         "type": "route",
-        "answer_label": "Толкнуть массивную дубовую дверь и войти в дом"
+        "answer_label": "Push the heavy oak door and enter the house"
       },
       {
         "id": -11,
         "from_binding_id": -1,
         "to_binding_id": -6,
         "type": "route",
-        "answer_label": "Испугаться грозы и убежать через ворота"
+        "answer_label": "Take fright at the storm and flee through the gates"
       },
       {
         "id": -12,
         "from_binding_id": -2,
         "to_binding_id": -3,
         "type": "route",
-        "answer_label": "Осторожно пройти по коридору в библиотеку"
+        "answer_label": "Carefully walk down the corridor to the library"
       },
       {
         "id": -13,
         "from_binding_id": -2,
         "to_binding_id": -5,
         "type": "route",
-        "answer_label": "Шагнуть в тёмную неосвещенную нишу"
+        "answer_label": "Step into the dark, unlit alcove"
       },
       {
         "id": -14,
         "from_binding_id": -3,
         "to_binding_id": -4,
         "type": "route",
-        "answer_label": "Потянуть за корешок синей книги с гербом"
+        "answer_label": "Pull the spine of the blue book with the coat of arms"
       }
     ],
     "materials": [
       {
         "id": -20,
-        "title": "У входа",
+        "title": "At the Entrance",
         "location_binding_id": -1,
         "upload_type": "text"
       },
       {
         "id": -21,
-        "title": "В коридоре",
+        "title": "In the Corridor",
         "location_binding_id": -2,
         "upload_type": "text"
       },
       {
         "id": -22,
-        "title": "В библиотеке",
+        "title": "In the Library",
         "location_binding_id": -3,
         "upload_type": "text"
       },
       {
         "id": -23,
-        "title": "Триумф",
+        "title": "Triumph",
         "location_binding_id": -4,
         "upload_type": "text"
       },
       {
         "id": -24,
-        "title": "Провал",
+        "title": "Failure",
         "location_binding_id": -5,
         "upload_type": "text"
       },
       {
         "id": -25,
-        "title": "Отступление",
+        "title": "Retreat",
         "location_binding_id": -6,
         "upload_type": "text"
       }
